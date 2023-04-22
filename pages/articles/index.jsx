@@ -1,13 +1,10 @@
-import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import React from 'react'
 import { GraphQLClient, gql } from 'graphql-request';
 import Header from '@/components/Header'
 import MainPage from '@/components/MainPage';
+import Head from 'next/head'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export default function Home({ posts }) {
+function index({posts}) {
   return (
     <>
       <Head>
@@ -26,32 +23,35 @@ export default function Home({ posts }) {
   )
 }
 
-export async function getStaticProps() {
-  const hygraph = new GraphQLClient(
-    `${process.env.HYGRAPH_ENDPOINT}`
-  );
+export default index
 
-  const QUERY = gql`
-  query Assets {
-    posts {
-      slug
-      id
-      image {
-        url
+
+export async function getStaticProps() {
+    const hygraph = new GraphQLClient(
+      `${process.env.HYGRAPH_ENDPOINT}`
+    );
+  
+    const QUERY = gql`
+    query Assets {
+      posts {
+        slug
+        id
+        image {
+          url
+        }
+        metaDescription
+        dateCreated
+        featured
+        title
       }
-      metaDescription
-      dateCreated
-      featured
-      title
+    }
+    `
+    const { posts } = await hygraph.request(QUERY);
+    posts.reverse();
+    return {
+      props: {
+        posts
+      },
+      revalidate: 60
     }
   }
-  `
-  const { posts } = await hygraph.request(QUERY);
-  posts.reverse();
-  return {
-    props: {
-      posts
-    },
-    revalidate: 60
-  }
-}
