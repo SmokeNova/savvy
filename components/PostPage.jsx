@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { RichText } from '@graphcms/rich-text-react-renderer';
 import Link from "next/link";
+import Sidebar from "./Sidebar";
 
 
-function PostPage({ post }) {
+function PostPage({ post, posts }) {
 
     return (
         <section className='flex flex-row gap-7 w-full h-fit justify-between px-4'>
@@ -34,6 +35,7 @@ function PostPage({ post }) {
                     />
                 </div>
             </div>
+            <Sidebar posts={posts} />
         </section>
     )
 }
